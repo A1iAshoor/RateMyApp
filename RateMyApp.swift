@@ -25,7 +25,7 @@
 import UIKit
 
 
-class RateMyApp : UIViewController,UIAlertViewDelegate{
+class RateMyApp : UIViewController{
     
     fileprivate let kTrackingAppVersion     = "kRateMyApp_TrackingAppVersion"
     fileprivate let kFirstUseDate			= "kRateMyApp_FirstUseDate"
@@ -36,8 +36,7 @@ class RateMyApp : UIViewController,UIAlertViewDelegate{
     fileprivate let kRemindLater            = "kRateMyApp_RemindLater"
     fileprivate let kRemindLaterPressedDate	= "kRateMyApp_RemindLaterPressedDate"
     
-    fileprivate var reviewURL = "itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id="
-    fileprivate var reviewURLiOS7 = "itms-apps://itunes.apple.com/app/id"
+    fileprivate var reviewURL = "itms-apps://itunes.apple.com/app/id"
     
     
     var promptAfterDays:Double = 30
@@ -54,18 +53,18 @@ class RateMyApp : UIViewController,UIAlertViewDelegate{
     
     
     class var sharedInstance : RateMyApp {
-    struct Static {
-        static let instance : RateMyApp = RateMyApp()
+        struct Static {
+            static let instance : RateMyApp = RateMyApp()
         }
         return Static.instance
     }
     
     
-//    private override init(){
-//        
-//        super.init()
-//        
-//    }
+    //    private override init(){
+    //
+    //        super.init()
+    //
+    //    }
     
     internal required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -217,60 +216,28 @@ class RateMyApp : UIViewController,UIAlertViewDelegate{
             alertMessage = message
         }
         
-        
-        if #available(iOS 8.0, *) {
-            let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-            
-            
-            alert.addAction(UIAlertAction(title: alertOKTitle, style:.destructive, handler: { alertAction in
-                self.okButtonPressed()
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            
-            alert.addAction(UIAlertAction(title: alertCancelTitle, style:.cancel, handler:{ alertAction in
-                self.cancelButtonPressed()
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            
-            alert.addAction(UIAlertAction(title: alertRemindLaterTitle, style:.default, handler: { alertAction in
-                self.remindLaterButtonPressed()
-                alert.dismiss(animated: true, completion: nil)
-            }))
-            
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            let controller = appDelegate.window?.rootViewController
-            
-            controller?.present(alert, animated: true, completion: nil)
-        } else {
-            let alert = UIAlertView()
-            alert.title = alertTitle
-            alert.message = alertMessage
-            alert.addButton(withTitle: alertCancelTitle)
-            alert.addButton(withTitle: alertRemindLaterTitle)
-            alert.addButton(withTitle: alertOKTitle)
-            alert.delegate = self
-            alert.show()
-        }
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
         
         
-    }
-    
-    internal func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int){
+        alert.addAction(UIAlertAction(title: alertOKTitle, style:.destructive, handler: { alertAction in
+            self.okButtonPressed()
+            alert.dismiss(animated: true, completion: nil)
+        }))
         
-        if(buttonIndex == 0)
-        {
-            cancelButtonPressed()
-        }
-        else if(buttonIndex == 1)
-        {
-            remindLaterButtonPressed()
-        }
-        else if(buttonIndex == 2)
-        {
-            okButtonPressed()
-        }
+        alert.addAction(UIAlertAction(title: alertCancelTitle, style:.cancel, handler:{ alertAction in
+            self.cancelButtonPressed()
+            alert.dismiss(animated: true, completion: nil)
+        }))
         
-        alertView.dismiss(withClickedButtonIndex: buttonIndex, animated: true)
+        alert.addAction(UIAlertAction(title: alertRemindLaterTitle, style:.default, handler: { alertAction in
+            self.remindLaterButtonPressed()
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let controller = appDelegate.window?.rootViewController
+        
+        controller?.present(alert, animated: true, completion: nil)
         
     }
     
@@ -291,13 +258,13 @@ class RateMyApp : UIViewController,UIAlertViewDelegate{
         }
         
         return true
-        
+
     }
     
     fileprivate func okButtonPressed(){
-    
+        
         UserDefaults.standard.set(true, forKey: kDidRateVersion)
-        let appStoreURL = URL(string:reviewURLiOS7+appID)
+        let appStoreURL = URL(string:reviewURL+appID)
         UIApplication.shared.openURL(appStoreURL!)
         
     }
